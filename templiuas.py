@@ -1,47 +1,5 @@
 import streamlit as st
 
-# ----------------------------- CSS STYLING -----------------------------
-st.set_page_config(page_title="Aplikasi Belanja", page_icon="🛒")
-
-st.markdown("""
-    <style>
-    body {
-        background-color: #fff0f5;
-    }
-    .judul-app {
-        font-size: 40px;
-        font-weight: bold;
-        text-align: center;
-        color: #C71585;
-        margin-top: 10px;
-        margin-bottom: 30px;
-    }
-    .menu-box {
-        background: linear-gradient(to right, #ffe4ec, #fcd2e2);
-        padding: 20px;
-        border-radius: 12px;
-        border-left: 6px solid #FF69B4;
-        box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
-    }
-    .metric-box {
-        background-color: #ffe9f0;
-        padding: 15px;
-        border-radius: 10px;
-        font-size: 18px;
-        text-align: center;
-        color: #C71585;
-    }
-    .box-shadow {
-        background-color: #fffafc;
-        box-shadow: 2px 2px 8px rgba(0,0,0,0.05);
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 10px;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# ----------------------------- Kelas Barang -----------------------------
 class Barang:
     def __init__(self, nama, harga, jumlah, kategori):
         self.nama = nama
@@ -54,7 +12,6 @@ class Barang:
         status = "✅" if self.is_beli else "❌"
         return f"{status} {self.nama} - Harga: Rp{self.harga:,}, Jumlah: {self.jumlah}, Kategori: {self.kategori}"
 
-# ----------------------------- State Awal -----------------------------
 if 'data_barang' not in st.session_state:
     st.session_state.data_barang = []
 
@@ -62,56 +19,32 @@ def hitung_total():
     total = sum(b.harga * b.jumlah for b in st.session_state.data_barang)
     return f"Rp{total:,}"
 
-# ----------------------------- Tampilan Header -----------------------------
-st.markdown('<div class="judul-app">🛒 Aplikasi Daftar Belanja Sederhana</div>', unsafe_allow_html=True)
+st.markdown("<h1 style='color:#ff69b4;'>🛒 Aplikasi Daftar Belanja Sederhana</h1>", unsafe_allow_html=True)
 
 col1, col2 = st.columns([3, 1])
 with col1:
-    st.markdown("""
-        <div class="menu-box">
-        <h4>📋 Menu:</h4>
-        <ol>
-        <li>📄 Lihat Daftar Barang</li>
-        <li>➕ Tambah Barang</li>
-        <li>✔️ Tandai Barang Sudah Dibeli</li>
-        <li>✏️ Edit Barang</li>
-        <li>🗑️ Hapus Barang</li>
-        </ol>
-        </div>
-    """, unsafe_allow_html=True)
+    st.markdown("<h3 style='color:#ff8acb;'>📋 Menu:</h3>", unsafe_allow_html=True)
 with col2:
-    st.markdown(f"""
-        <div class="metric-box">
-            💰 <strong>Total Belanja:</strong><br>{hitung_total()}
-        </div>
-    """, unsafe_allow_html=True)
+    st.metric("Total Belanja", hitung_total())
 
-# ----------------------------- Input Menu -----------------------------
+st.markdown("**1. Lihat Daftar Barang**")
+st.markdown("**2. Tambah Barang**")
+st.markdown("**3. Tandai Barang Sudah Dibeli**")
+st.markdown("**4. Edit Barang**")
+st.markdown("**5. Hapus Barang**")
+
 menu = st.text_input("Masukkan angka menu (1-5):")
 
-# ----------------------------- Menu 1 -----------------------------
 if menu == "1":
-    st.subheader("📦 Daftar Barang")
+    st.markdown("<h4 style='color:#ff8acb;'>📄 Daftar Barang</h4>", unsafe_allow_html=True)
     if st.session_state.data_barang:
         for i, barang in enumerate(st.session_state.data_barang):
-            status = "✅" if barang.is_beli else "❌"
-            warna = {
-                "Primer": "🔴",
-                "Sekunder": "🟠",
-                "Tersier": "🟢"
-            }[barang.kategori]
-            st.markdown(f"""
-                <div class="box-shadow">
-                    <strong>{i+1}. {status} {barang.nama}</strong><br>
-                    Harga: Rp{barang.harga:,} | Jumlah: {barang.jumlah} | Kategori: {warna} {barang.kategori}
-                </div>
-            """, unsafe_allow_html=True)
+            st.write(f"{i+1}. {barang}")
     else:
         st.info("Belum ada barang dalam daftar.")
-
-# ----------------------------- Menu 2 -----------------------------
+        
 elif menu == "2":
-    st.subheader("➕ Tambah Barang")
+    st.markdown("<h4 style='color:#ff8acb;'>➕ Tambah Barang</h4>", unsafe_allow_html=True)
     with st.form(key='tambah_barang'):
         nama = st.text_input("Nama Barang")
         col1, col2 = st.columns(2)
@@ -129,9 +62,8 @@ elif menu == "2":
             else:
                 st.warning("Harap isi semua kolom dengan benar!")
 
-# ----------------------------- Menu 3 -----------------------------
 elif menu == "3":
-    st.subheader("✔️ Tandai Barang Sudah Dibeli")
+    st.markdown("<h4 style='color:#ff8acb;'>✔ Tandai Barang Sudah Dibeli</h4>", unsafe_allow_html=True)
     if st.session_state.data_barang:
         for i, barang in enumerate(st.session_state.data_barang):
             if st.checkbox(f"{barang}", key=f"beli_{i}"):
@@ -142,9 +74,8 @@ elif menu == "3":
     else:
         st.info("Belum ada barang dalam daftar.")
 
-# ----------------------------- Menu 4 -----------------------------
 elif menu == "4":
-    st.subheader("✏️ Edit Barang")
+    st.markdown("<h4 style='color:#ff8acb;'>✏ Edit Barang</h4>", unsafe_allow_html=True)
     if st.session_state.data_barang:
         pilihan = st.selectbox(
             "Pilih barang yang akan diedit",
@@ -157,9 +88,9 @@ elif menu == "4":
             barang = st.session_state.data_barang[index]
             
             with st.form(key='edit_form'):
-                st.write("### Data Barang Saat Ini:")
+                st.markdown("**Data Barang Saat Ini:**")
                 st.write(barang)
-                st.write("### Masukkan Data Baru:")
+                st.markdown("**Masukkan Data Baru:**")
                 
                 nama_baru = st.text_input("Nama Baru", value=barang.nama)
                 col1, col2 = st.columns(2)
@@ -182,9 +113,8 @@ elif menu == "4":
     else:
         st.info("Belum ada barang dalam daftar.")
 
-# ----------------------------- Menu 5 -----------------------------
 elif menu == "5":
-    st.subheader("🗑️ Hapus Barang")
+    st.markdown("<h4 style='color:#ff8acb;'>🗑 Hapus Barang</h4>", unsafe_allow_html=True)
     if st.session_state.data_barang:
         pilihan = st.multiselect(
             "Pilih barang yang akan dihapus",
@@ -194,17 +124,14 @@ elif menu == "5":
         
         if pilihan and st.button("Hapus Barang Terpilih"):
             indices_to_delete = sorted([int(item.split('.')[0])-1 for item in pilihan], reverse=True)
+            
             for index in indices_to_delete:
                 if 0 <= index < len(st.session_state.data_barang):
                     del st.session_state.data_barang[index]
+            
             st.success(f"{len(indices_to_delete)} barang berhasil dihapus!")
     else:
         st.info("Belum ada barang dalam daftar.")
 
-# ----------------------------- Validasi Menu -----------------------------
 elif menu != "":
     st.warning("Masukkan angka 1 - 5 sesuai menu.")
-
-# ----------------------------- Footer -----------------------------
-st.markdown("---")
-st.markdown("<center><span style='color:gray;'>Dibuat dengan 💖 oleh Kamu | Powered by Streamlit</span></center>", unsafe_allow_html=True)
