@@ -1,5 +1,26 @@
 import streamlit as st
 
+# Custom CSS
+st.markdown("""
+    <style>
+        body {
+            background-color: #6a0dad;
+        }
+        .stApp {
+            background-color: #6a0dad;
+        }
+        h1, h2, h3, h4, h5, h6, .pink-text {
+            color: #ff8acb;
+        }
+        .metric-value {
+            color: white !important;
+        }
+        .css-1offfwp {
+            color: white;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 class Barang:
     def __init__(self, nama, harga, jumlah, kategori):
         self.nama = nama
@@ -19,11 +40,11 @@ def hitung_total():
     total = sum(b.harga * b.jumlah for b in st.session_state.data_barang)
     return f"Rp{total:,}"
 
-st.markdown("<h1 style='color:#ff69b4;'>🛒 Aplikasi Daftar Belanja Sederhana</h1>", unsafe_allow_html=True)
+st.markdown("<h1 class='pink-text'>🛒 Aplikasi Daftar Belanja Sederhana</h1>", unsafe_allow_html=True)
 
 col1, col2 = st.columns([3, 1])
 with col1:
-    st.markdown("<h3 style='color:#ff8acb;'>📋 Menu:</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 class='pink-text'>📋 Menu:</h3>", unsafe_allow_html=True)
 with col2:
     st.metric("Total Belanja", hitung_total())
 
@@ -36,7 +57,7 @@ st.markdown("**5. Hapus Barang**")
 menu = st.text_input("Masukkan angka menu (1-5):")
 
 if menu == "1":
-    st.markdown("<h4 style='color:#ff8acb;'>📄 Daftar Barang</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 class='pink-text'>📄 Daftar Barang</h4>", unsafe_allow_html=True)
     if st.session_state.data_barang:
         for i, barang in enumerate(st.session_state.data_barang):
             st.write(f"{i+1}. {barang}")
@@ -44,7 +65,7 @@ if menu == "1":
         st.info("Belum ada barang dalam daftar.")
         
 elif menu == "2":
-    st.markdown("<h4 style='color:#ff8acb;'>➕ Tambah Barang</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 class='pink-text'>➕ Tambah Barang</h4>", unsafe_allow_html=True)
     with st.form(key='tambah_barang'):
         nama = st.text_input("Nama Barang")
         col1, col2 = st.columns(2)
@@ -63,7 +84,7 @@ elif menu == "2":
                 st.warning("Harap isi semua kolom dengan benar!")
 
 elif menu == "3":
-    st.markdown("<h4 style='color:#ff8acb;'>✔ Tandai Barang Sudah Dibeli</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 class='pink-text'>✔ Tandai Barang Sudah Dibeli</h4>", unsafe_allow_html=True)
     if st.session_state.data_barang:
         for i, barang in enumerate(st.session_state.data_barang):
             if st.checkbox(f"{barang}", key=f"beli_{i}"):
@@ -75,7 +96,7 @@ elif menu == "3":
         st.info("Belum ada barang dalam daftar.")
 
 elif menu == "4":
-    st.markdown("<h4 style='color:#ff8acb;'>✏ Edit Barang</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 class='pink-text'>✏ Edit Barang</h4>", unsafe_allow_html=True)
     if st.session_state.data_barang:
         pilihan = st.selectbox(
             "Pilih barang yang akan diedit",
@@ -114,7 +135,7 @@ elif menu == "4":
         st.info("Belum ada barang dalam daftar.")
 
 elif menu == "5":
-    st.markdown("<h4 style='color:#ff8acb;'>🗑 Hapus Barang</h4>", unsafe_allow_html=True)
+    st.markdown("<h4 class='pink-text'>🗑 Hapus Barang</h4>", unsafe_allow_html=True)
     if st.session_state.data_barang:
         pilihan = st.multiselect(
             "Pilih barang yang akan dihapus",
@@ -124,11 +145,9 @@ elif menu == "5":
         
         if pilihan and st.button("Hapus Barang Terpilih"):
             indices_to_delete = sorted([int(item.split('.')[0])-1 for item in pilihan], reverse=True)
-            
             for index in indices_to_delete:
                 if 0 <= index < len(st.session_state.data_barang):
                     del st.session_state.data_barang[index]
-            
             st.success(f"{len(indices_to_delete)} barang berhasil dihapus!")
     else:
         st.info("Belum ada barang dalam daftar.")
